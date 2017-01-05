@@ -4,19 +4,23 @@
 			<table>
 				<thead>
 					<th>Title</th>
-					<th ng-show="showduration">Duration</th>
-					<th ng-show="showdroptime">Drop Time</th>
-					<th ng-show="showkilltime">Kill Time</th>
+					<th ng-show="showDuration">Duration</th>
+					<th ng-show="showDroptime">Drop Time</th>
+					<th ng-show="showKilltime">Kill Time</th>
 					<th ng-show="showbpm">BPM</th>
+					<th ng-show="showArtist">Artist</th>
+					<th ng-show="showGenre">Genre</th>
 					<th>Actions</th>
 				</thead>
 				<tbody>
 					<tr ng-repeat="music in musics" class="music">
-						<td>{{music['title']}}</td>
-						<td ng-show="showduration">{{music['duration_formatted']}}</td>
-						<td ng-show="showdroptime">{{ music['drop_time'] ? music['drop_time'] : "-" }}</td>
-						<td ng-show="showkilltime">{{music['kill_time'] ? music['kill_time'] : "-"}}</td>
-						<td ng-show="showbpm">{{music['bpm'] ? music['bpm'] : "-"}}</td>
+						<td>{{music.title}}</td>
+						<td ng-show="showDuration">{{music.getDurationFormatted()}}</td>
+						<td ng-show="showDroptime">{{ music.droptime ? music.droptime : "-" }}</td>
+						<td ng-show="showKilltime">{{music.killtime ? music.killtime : "-"}}</td>
+						<td ng-show="showbpm">{{music.bpm ? music.bpm : "-"}}</td>
+						<td ng-show="showArtist">{{music.artist ? music.artist.name : "-"}}</td>
+						<td ng-show="showGenre">{{music.genre ? music.genre.name : "-"}}</td>
 						<td>
 							<a href="" ng-click="editMusic(music);" style="color: deepskyblue;"><i class="fa fa-pencil"></i></a>
 							<a href="" ng-click="deleteMusic(music);" style="color: crimson;"><i class="fa fa-remove"></i></a>
@@ -32,10 +36,12 @@
 
 				<div class="filters">
 					<b>Showing</b>
-					<label><input type="checkbox" ng-model="showduration" ng-init="showduration=true" checked> Duration</label>
+					<label><input type="checkbox" ng-model="showDuration" ng-init="showDuration=true" checked> Duration</label>
 					<label><input type="checkbox" ng-model="showbpm" ng-init="showbpm=true" checked> BPM</label>			
-					<label><input type="checkbox" ng-model="showdroptime" ng-init="showdroptime=false" checked> Drop Time</label>
-					<label><input type="checkbox" ng-model="showkilltime" ng-init="showkilltime=false" checked> Kill Time</label>					
+					<label><input type="checkbox" ng-model="showDroptime" ng-init="showDroptime=false" checked> Drop Time</label>
+					<label><input type="checkbox" ng-model="showKilltime" ng-init="showKilltime=false" checked> Kill Time</label>	
+					<label><input type="checkbox" ng-model="showArtist" ng-init="showKilltime=false" checked> Artist</label>	
+					<label><input type="checkbox" ng-model="showGenre" ng-init="showKilltime=false" checked> Genre</label>	
 				</div>
 			</div>		
 		</div>

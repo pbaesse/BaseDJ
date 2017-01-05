@@ -12,6 +12,8 @@
 var app = angular.module("myApp", []);
 app.controller("MusicController", ['$scope', function($scope) {
 	$scope.musics = [];
+	$scope.artists = [];
+	$scope.genres = [];
 
 	if (localStorage.getItem("selectedMusic") != null) {
 		$scope.selectedMusic = JSON.parse(localStorage.getItem("selectedMusic"));
@@ -40,11 +42,13 @@ app.controller("MusicController", ['$scope', function($scope) {
 		}
 
 		var duration = $scope.selectedMusic.duration != undefined ? $scope.selectedMusic.duration : 'NULL';
-		var droptime = $scope.selectedMusic.drop_time != undefined ? $scope.selectedMusic.drop_time : 'NULL';
-		var killtime = $scope.selectedMusic.kill_time != undefined ? $scope.selectedMusic.kill_time : 'NULL';
+		var droptime = $scope.selectedMusic.droptime != undefined ? $scope.selectedMusic.droptime : 'NULL';
+		var killtime = $scope.selectedMusic.killtime != undefined ? $scope.selectedMusic.killtime : 'NULL';
 		var bpm = $scope.selectedMusic.bpm != undefined ? $scope.selectedMusic.bpm : 'NULL';
+		var id_artist = $scope.selectedMusic.artist.id != undefined ? $scope.selectedMusic.artist.id : 'NULL';
+		var id_genre = $scope.selectedMusic.genre.id != undefined ? $scope.selectedMusic.genre.id : 'NULL';
 
-		var stm = "UPDATE music SET title = "+title+", duration = "+duration+", drop_time = "+droptime+", kill_time = "+killtime+", bpm = "+bpm+" WHERE id = "+id+";";
+		var stm = "UPDATE music SET title = "+title+", duration = "+duration+", drop_time = "+droptime+", kill_time = "+killtime+", bpm = "+bpm+", id_artist = "+id_artist+", id_genre = "+id_genre+" WHERE id = "+id+";";
 		database.run(stm);
 		updateDatabase();
 
@@ -71,8 +75,10 @@ app.controller("MusicController", ['$scope', function($scope) {
 		var droptime = $scope.droptime != undefined ? $scope.droptime : 'NULL';
 		var killtime = $scope.killtime != undefined ? $scope.killtime : 'NULL';
 		var bpm = $scope.bpm != undefined ? $scope.bpm : 'NULL';
+		var id_artist = $scope.id_artist != undefined ? $scope.id_artist : 'NULL';
+		var id_genre = $scope.id_genre != undefined ? $scope.id_genre : 'NULL';
 
-		var stm = "INSERT INTO music(title, duration, drop_time, kill_time, bpm) VALUES ("+title+", "+duration+", "+droptime+", "+killtime+", "+bpm+")";
+		var stm = "INSERT INTO music(title, duration, drop_time, kill_time, bpm, id_artist, id_genre) VALUES ("+title+", "+duration+", "+droptime+", "+killtime+", "+bpm+", "+id_artist+", "+id_genre+")";
 		database.run(stm);
 		updateDatabase();
 		alert("Música '"+title+"' adicionada!");
@@ -84,13 +90,40 @@ app.controller("MusicController", ['$scope', function($scope) {
 		while(stm.step()) {
 			res = stm.getAsObject();
 
-			res["duration_formatted"] = formatSeconds(res['duration']);
+			var genre = null, artist = null;
+			if (res.id_genre) {
+				var stm2 = database.prepare("SELECT name FROM genre WHERE id = " + res.id_genre + ";");
+				stm2.step();
+				var res2 = stm2.getAsObject();
+				genre = new Genre(res.id_genre, res2.name);
+			}
 
-			$scope.musics.push(res);
+			if (res.id_artist) {
+				var stm3 = database.prepare("SELECT name FROM artist WHERE id = " + res.id_artist + ";");
+				stm3.step();
+				var res3 = stm3.getAsObject();
+				artist = new Artist(res.id_artist, res3.name);
+			}
+
+			$scope.musics.push(new Music(res.id, res.title, res.duration, res.drop_time, res.kill_time, res.bpm, artist, genre));
 		}
 	};
 
-// 			$scope.selectMusic = function(music) {
-// 				alert("Você escolheu '" + music["title"] + "'!");
-// 			};
+	$scope.selectGenres = function() {
+		var stm = database.prepare("SELECT * FROM genre;");
+		$scope.genres = [];
+		while(stm.step()) {
+			res = stm.getAsObject();
+			$scope.genres.push(new Genre(res.id, res.name));
+		}	
+	};
+
+	$scope.selectArtists = function() {
+		var stm = database.prepare("SELECT * FROM artist;");
+		$scope.artists = [];
+		while(stm.step()) {
+			res = stm.getAsObject();
+			$scope.artists.push(new Artist(res.id, res.name));
+		}	
+	};	
 }]);

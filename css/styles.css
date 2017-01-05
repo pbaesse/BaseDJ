@@ -244,3 +244,25 @@ nav li.active a {
 	justify-content: center;
 	align-items: center;
 }
+
+.form-select {
+	display: flex;
+	flex-direction: row;
+}
+
+.form-select select {
+	width: 100%;
+    padding: 0 16px;
+    border: none;
+    letter-spacing: 1px;
+    background-color: #444;
+    color: white;
+    transition-duration: 1s;
+}
+
+.form-select label {
+	padding: 5px 15px;
+    background-color: midnightblue;
+    border: 1px solid midnightblue;
+    font-weight: bold;
+}

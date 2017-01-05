@@ -1,4 +1,4 @@
-<div ng-controller='MusicController' class="container center">
+<div ng-controller='MusicController' ng-init="selectGenres(); selectArtists();" class="container center">
 	<h1>New Music</h1>
 	<form ng-submit='addMusic();' class="music-form" name="addMusic-form">
 		<input type="text" name="title" placeholder="Title" data-ng-model="title" required>
@@ -6,6 +6,18 @@
 		<input type="number" name="drop_time" placeholder="Drop Time" min="0" data-ng-model="droptime">
 		<input type="number" name="kill_time" placeholder="Kill Time" min="0" data-ng-model="killtime">
 		<input type="number" name="bpm" placeholder="BPM" min="0" data-ng-model="bpm">
+		<div class="form-select">
+			<label>Artist</label>
+			<select name="artist" data-ng-model="id_artist" data-ng-options="artist.id as artist.name for artist in artists">
+				<option value="">No artist</option>
+			</select>
+		</div>
+		<div class="form-select">
+			<label>Genre</label>
+			<select data-ng-model="id_genre" data-ng-options="genre.id as genre.name for genre in genres">
+				<option value="">No genre</option>
+			</select>	
+		</div>
 		<input type="submit" value="Done" name="new-music">
 	</form>
 </div>
