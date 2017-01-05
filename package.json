@@ -1,11 +1,10 @@
 {
-  "name": "electron-app",
+  "name": "BaseDJ",
   "version": "1.0.0",
-  "description": "",
+  "description": "Find and tag your musics!",
   "main": "main.js",
   "dependencies": {
     "angular": "^1.6.1",
-    "pretty-bytes": "^2.0.1",
     "sql.js": "^0.4.0"
   },
   "devDependencies": {
