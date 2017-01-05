@@ -1,0 +1,17 @@
+<script type="text/javascript" src="./js/functions.js"></script>
+<script type="text/javascript">
+	"use strict";
+	var Music = class Music {
+		constructor(title, duration) {
+			this.title = title;
+			this.duration = duration;
+		}
+
+		getDurationFormatted() {
+			return formatSeconds(this.duration);
+		}
+	}
+
+	var music = new Music("Paradise", 210);
+	console.log(music.getDurationFormatted());
+</script>

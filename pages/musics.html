@@ -1,0 +1,43 @@
+<div ng-controller="MusicController" ng-init="selectMusics()">
+	<div class="second-container">
+		<div class="musics">
+			<table>
+				<thead>
+					<th>Title</th>
+					<th ng-show="showduration">Duration</th>
+					<th ng-show="showdroptime">Drop Time</th>
+					<th ng-show="showkilltime">Kill Time</th>
+					<th ng-show="showbpm">BPM</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="music in musics" class="music">
+						<td>{{music['title']}}</td>
+						<td ng-show="showduration">{{music['duration_formatted']}}</td>
+						<td ng-show="showdroptime">{{ music['drop_time'] ? music['drop_time'] : "-" }}</td>
+						<td ng-show="showkilltime">{{music['kill_time'] ? music['kill_time'] : "-"}}</td>
+						<td ng-show="showbpm">{{music['bpm'] ? music['bpm'] : "-"}}</td>
+						<td>
+							<a href="" ng-click="editMusic(music);" style="color: deepskyblue;"><i class="fa fa-pencil"></i></a>
+							<a href="" ng-click="deleteMusic(music);" style="color: crimson;"><i class="fa fa-remove"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="sidebar">
+			<div class="container">
+				<a href="#" class="btn" onclick="callPage('add-music');	">Add music</a>
+
+				<div class="filters">
+					<b>Showing</b>
+					<label><input type="checkbox" ng-model="showduration" ng-init="showduration=true" checked> Duration</label>
+					<label><input type="checkbox" ng-model="showbpm" ng-init="showbpm=true" checked> BPM</label>			
+					<label><input type="checkbox" ng-model="showdroptime" ng-init="showdroptime=false" checked> Drop Time</label>
+					<label><input type="checkbox" ng-model="showkilltime" ng-init="showkilltime=false" checked> Kill Time</label>					
+				</div>
+			</div>		
+		</div>
+	</div>			
+</div>

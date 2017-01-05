@@ -1,0 +1,11 @@
+<div ng-controller='MusicController' class="container center">
+	<h1>New Music</h1>
+	<form ng-submit='addMusic();' class="music-form" name="addMusic-form">
+		<input type="text" name="title" placeholder="Title" data-ng-model="title" required>
+		<input type="number" name="duration" placeholder="Duration" data-ng-model="duration">
+		<input type="number" name="drop_time" placeholder="Drop Time" min="0" data-ng-model="droptime">
+		<input type="number" name="kill_time" placeholder="Kill Time" min="0" data-ng-model="killtime">
+		<input type="number" name="bpm" placeholder="BPM" min="0" data-ng-model="bpm">
+		<input type="submit" value="Done" name="new-music">
+	</form>
+</div>
