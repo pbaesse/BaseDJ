@@ -1,15 +1,15 @@
-var database, fs, path;
+var connection, fs, path;
 
 function initDatabase() {
 	path = require('path');
 	fs = require('fs');
 	var SQL = require('sql.js');
 	var bfr = fs.readFileSync(path.resolve(__dirname, 'database', 'database.db'));
-	database = new SQL.Database(bfr);
+	connection = new SQL.Database(bfr);
 }
 
 function updateDatabase() {
-	var data = database.export();
+	var data = connection.export();
 	var buffer = new Buffer(data);
 	fs.writeFileSync(path.resolve(__dirname, 'database', 'database.db'), buffer);
 }
