@@ -5,70 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Area 51</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" type="text/css" href="./node_modules/angular-material/angular-material.min.css">
     <link rel="stylesheet" type="text/css" href="./fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link href="./node_modules/angular-material-data-table/dist/md-data-table.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./css/master.css">
 </head>
-<body>
-	<nav id="menu">
-		<ul>
-			<li class="active" onclick="callPage('home', this);"><a href="#">Home</a></li>
-			<li onclick="callPage('musics', this);"><a href="#">Musics</a></li>
-			<li onclick="callPage('playlists', this);"><a href="#">Playlist</a></li>
-		</ul>
-	</nav>
-	<div class="content" ng-app="myApp">
-		<div class="container" ng-include="'pages/home.html'">
+<body ng-app="mainModule" onload="goto('home');"> 
+	<div ng-cloak ng-init="currentNavItem='home'">
+		<md-content style="overflow: hidden; display: flex; flex-direction: column; height: 100vh;">
+			<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+				<md-nav-item onclick="goto('home');" md-nav-click="goto('home')" name="home">Home</md-nav-item>
+				<md-nav-item onclick="goto('musics');" md-nav-click="goto('musics')" name="musics">Musics</md-nav-item>
+				<md-nav-item onclick="goto('playlists');" md-nav-click="goto('playlists')" name="playlists">Playlists</md-nav-item>
+			</md-nav-bar>
+			<div class="ext-content" layout="column" style="overflow-y: auto;">
+				
+			</div>
+		</md-content>
+	</div>
 
-		</div>
+	<div style="position: fixed; width: 100%; height: 100%; left: 0; top:0; background-color: rgba(0,0,0,0.8);" layout="row" layout-align="center center" id="loading">
+		<md-progress-circular md-mode="indeterminate" class="md-accent" md-diameter="100px"></md-progress-circular>
 	</div>
 
 	<!-- Angular Material requires Angular.js Libraries -->
-	 <script src="./node_modules/angular/angular.min.js"></script>
-	 <script src="./node_modules/angular-animate/angular-animate.min.js"></script>
-	 <script src="./node_modules/angular-aria/angular-aria.min.js"></script>
-	 <!-- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script> -->
-
-	 <!-- Angular Material Library -->
-	 <script src="./node_modules/angular-material/angular-material.min.js"></script>
-
 	<script>window.$ = window.jQuery = require('./js/jquery.min.js');</script>
-	<script type="text/javascript" src='./js/functions.js'></script>
+	<script src="./node_modules/angular/angular.min.js"></script>
+	<script src="./node_modules/angular-animate/angular-animate.min.js"></script>
+	<script src="./node_modules/angular-aria/angular-aria.min.js"></script>
+	<!-- Angular Material Library -->
+	<script src="./node_modules/angular-material/angular-material.min.js"></script>
+	<script src="./node_modules/angular-material-data-table/dist/md-data-table.min.js"></script>
+
+	<script src='./js/functions.js'></script>
 	<script type="text/javascript">
 		initDatabase();
 	</script>
 	<script type="text/javascript" src="./js/classes.js"></script>
-	<script src="./js/music-controller.js" type='text/javascript'></script>
-	<script type="text/javascript">
-		function callPage(page, active ) {
-			if (active) {
-				$("#menu li.active").removeClass("active");
-				$(active).addClass('active');
-			}
-
-			var file = "pages/" + page + ".html";
-			$.get(file, function(data) {
-			    // Get the $compile service from the app's injector
-			    var injector = $('[ng-app]').injector();
-			    var $compile = injector.get('$compile');
-
-			    // Compile the HTML into a linking function...
-			    var linkFn = $compile(data);
-			    // ...and link it to the scope we're interested in.
-			    // Here we'll use the $rootScope.
-			    var $rootScope = injector.get('$rootScope');
-			    var elem = linkFn($rootScope);
-			    $('.content .container').text("");
-			    $('.content .container').append(elem);
-
-			    // Now that the content has been compiled, linked,
-			    // and added to the DOM, we must trigger a digest cycle
-			    // on the scope we used in order to update bindings.
-			    $rootScope.$digest();
-
-			  }, 'html');
-		}
-	</script>
+	<script src="./js/app.js" type='text/javascript'></script>
 </body>
 </html>
 

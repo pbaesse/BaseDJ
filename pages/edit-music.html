@@ -1,24 +1,65 @@
-<div ng-controller='MusicController' ng-init="selectGenres(); selectArtists();" class="container center">
-	<h1>Editing Music</h1>
-	<form ng-submit='updateMusic();' class="music-form" name="addMusic-form">
-		<input type="text" name="title" placeholder="Title" data-ng-model="selectedMusic.title" required>
-		<input type="number" name="duration" placeholder="Duration" data-ng-model="selectedMusic.duration">
-		<input type="number" name="drop_time" placeholder="Drop Time" min="0" data-ng-model="selectedMusic.droptime">
-		<input type="number" name="kill_time" placeholder="Kill Time" min="0" data-ng-model="selectedMusic.killtime">
-		<input type="number" name="bpm" placeholder="BPM" min="0" data-ng-model="selectedMusic.bpm">
-		<div class="form-select">
-			<label>Artist</label>
-			<select name="artist" data-ng-model="selectedMusic.artist.id" data-ng-options="artist.id as artist.name for artist in artists">
-				<option value="">No artist</option>
-			</select>
+<div ng-controller='MusicController as musicCtrl' ng-init="musicCtrl.selectGenres(); musicCtrl.selectArtists();">
+	<md-toolbar class="md-primary">
+		<div class="md-toolbar-tools">
+			<h1 flex>New Music</h1>
 		</div>
-		<div class="form-select">
-			<label>Genre</label>
-			<select data-ng-model="selectedMusic.genre.id" data-ng-options="genre.id as genre.name for genre in genres">
-				<option value="">No genre</option>
-			</select>	
-		</div>
-		
-		<input type="submit" value="Done" name="new-music">
-	</form>
+	</md-toolbar>
+	
+	<md-content layout-padding layout-align="center center" style>
+		<form ng-submit="" name="addMusic-form" layout="column">
+			<md-input-container>
+				<label>Title</label>
+				<input type="text" name="title" data-ng-model="musicCtrl.selectedMusic.title" required>	
+			</md-input-container>
+			
+			<div layout="row">
+				<md-input-container flex>
+					<label>Duration</label>
+					<input type="number" name="duration" data-ng-model="musicCtrl.selectedMusic.duration">	
+				</md-input-container>
+
+				<md-input-container flex>
+					<label>Drop Time</label>
+					<input type="number" name="drop_time" min="0" data-ng-model="musicCtrl.selectedMusic.droptime">
+				</md-input-container>
+
+				<md-input-container flex>
+					<label>Kill Time</label>
+					<input type="number" name="kill_time" min="0" data-ng-model="musicCtrl.selectedMusic.killtime">
+				</md-input-container>
+					
+				<md-input-container flex>
+					<label>BPM</label>
+					<input type="number" name="bpm" min="0" data-ng-model="musicCtrl.selectedMusic.bpm">
+				</md-input-container>
+			</div>
+
+			<div layout="row">
+				<md-input-container flex>
+					<label>Artist</label>
+					<md-select name="artist" data-ng-model="musicCtrl.selectedMusic.artist.id">
+						<md-option value=""><em>None</em></md-option>
+						<md-option ng-repeat="artist in musicCtrl.artists" ng-value="artist.id">
+							{{artist.name}}
+						</md-option>
+					</md-select>
+				</md-input-container>
+
+				<md-input-container flex>
+					<label>Genre</label>
+					<md-select name="genre" data-ng-model="musicCtrl.selectedMusic.genre.id">
+						<md-option value=""><em>None</em></md-option>
+						<md-option ng-repeat="genre in musicCtrl.genres" data-ng-value="genre.id">
+							{{genre.name}}
+						</md-option>
+					</md-select>
+				</md-input-container>
+			</div>
+			<div layout="row" layout-align="end" flex>
+				<md-button class="md-accent md-fab" ng-click="musicCtrl.updateMusic();" aria-label="Finish">
+					<md-icon md-icon-set="md">save</md-icon>
+				</md-button>
+			</div>
+		</form>
+	</md-content>
 </div>

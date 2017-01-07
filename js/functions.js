@@ -27,3 +27,36 @@ function formatSeconds(seconds) {
 	remainSecs = (remainSecs < 10 ? "0" : "") + remainSecs;
 	return minutes  + ":" + remainSecs;
 }
+
+function goto(local) {
+	// Applies the cloak when loading
+	$('.ext-content').addClass('ng-cloak');
+	$("#loading").css("display", "flex");
+
+	var file = "pages/" + local + ".html";
+	$.get(file, function(data) {
+	    // Get the $compile service from the app's injector
+	    var injector = $('[ng-app]').injector();
+	    var $compile = injector.get('$compile');
+
+	    // Compile the HTML into a linking function...
+	    var linkFn = $compile(data);
+	    // ...and link it to the scope we're interested in.
+	    // Here we'll use the $rootScope.
+	    var $rootScope = injector.get('$rootScope');
+	    var elem = linkFn($rootScope);
+	    $('.ext-content').text("");
+	    $('.ext-content').append(elem);
+
+	    // Now that the content has been compiled, linked,
+	    // and added to the DOM, we must trigger a digest cycle
+	    // on the scope we used in order to update bindings.
+	    $rootScope.$digest();
+
+	    // Remove the cloak when finish loading all angularjs things
+	    $rootScope.$$postDigest(function() {
+    		$("#loading").css("display", "none");
+    		$('.ext-content').removeClass('ng-cloak');
+	 	});
+	  }, 'html');
+}

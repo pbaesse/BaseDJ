@@ -1,50 +1,89 @@
-<div ng-controller="MusicController" ng-init="selectMusics()">
-	<div class="second-container">
-		<div class="musics">
-			<table>
-				<thead>
-					<th>Title</th>
-					<th ng-show="showDuration">Duration</th>
-					<th ng-show="showDroptime">Drop Time</th>
-					<th ng-show="showKilltime">Kill Time</th>
-					<th ng-show="showbpm">BPM</th>
-					<th ng-show="showArtist">Artist</th>
-					<th ng-show="showGenre">Genre</th>
-					<th>Actions</th>
-				</thead>
-				<tbody>
-					<tr ng-repeat="music in musics" class="music">
-						<td>{{music.title}}</td>
-						<td ng-show="showDuration">{{music.getDurationFormatted()}}</td>
-						<td ng-show="showDroptime">{{ music.droptime ? music.droptime : "-" }}</td>
-						<td ng-show="showKilltime">{{music.killtime ? music.killtime : "-"}}</td>
-						<td ng-show="showbpm">{{music.bpm ? music.bpm : "-"}}</td>
-						<td ng-show="showArtist">{{music.artist ? music.artist.name : "-"}}</td>
-						<td ng-show="showGenre">{{music.genre ? music.genre.name : "-"}}</td>
-						<td>
-							<a href="" ng-click="editMusic(music);" style="color: deepskyblue;"><i class="fa fa-pencil"></i></a>
-							<a href="" ng-click="deleteMusic(music);" style="color: crimson;"><i class="fa fa-remove"></i></a>
-							<a href="" ng-click="" style="color: white;"><i class="fa fa-search"></i></a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+<div ng-controller="MusicController as musicCtrl" ng-init="musicCtrl.selectMusics()" layout="column">
+	<md-toolbar class='md-primary'>
+		<div class="md-toolbar-tools">
+			<h2>Musics</h2>
+			<md-button class="md-accent md-mini md-fab" onclick="goto('add-music');">
+				<md-icon md-icon-set="md">add</md-icon>
+			</md-button>
+		</div>		
+	</md-toolbar>
 
-		<div class="sidebar">
-			<div class="container">
-				<a href="#" class="btn" onclick="callPage('add-music');	">Add music</a>
+	<md-content layout-padding>
+		<div layout="row" layout-align="space-between">
+			<md-card style="width:80%;">
+				<md-table-container>
+				  <table md-table>
+				    <thead md-head>
+				      <tr md-row>
+				        <th md-column><span>Title</span></th>
+				        <th md-column md-numeric ng-show="showDuration"><span>Duration</span></th>
+				        <th md-column md-numeric ng-show="showDroptime">Drop Time (s)</th>
+				        <th md-column md-numeric ng-show="showKilltime">Kill Time (s)</th>
+				        <th md-column md-numeric ng-show="showBpm">BPM</th>
+				        <th md-column md-numeric ng-show="showArtist">Artist</th>
+				        <th md-column md-numeric ng-show="showGenre">Genre</th>
+				        <th md-column md-numeric>Actions</th>
+				      </tr>
+				    </thead>
+				    <tbody md-body>
+				      <tr md-row ng-repeat="music in musicCtrl.musics">
+				        <td md-cell>{{music.title}}</td>
+				        <td md-cell ng-show="showDuration">{{music.duration ? music.getDurationFormatted() : "-"}}</td>
+				        <td md-cell ng-show="showDroptime">{{music.droptime ? music.droptime : "-"}}</td>
+				        <td md-cell ng-show="showKilltime">{{music.killtime ? music.killtime : "-"}}</td>
+				        <td md-cell ng-show="showBpm">{{music.bpm ? music.bpm : "-"}}</td>
+				        <td md-cell ng-show="showArtist">{{music.artist.name ? music.artist.name : "-"}}</td>
+				        <td md-cell ng-show="showGenre">{{music.genre.name ? music.genre.name : "-"}}</td>
+				        <td md-cell colspan="3">
+				        	<md-button class="md-fab md-mini md-accent" aria-label="Show">
+				        		<md-icon md-icon-set="md">visibility</md-icon>
+				        	</md-button>
 
-				<div class="filters">
-					<b>Showing</b>
-					<label><input type="checkbox" ng-model="showDuration" ng-init="showDuration=true" checked> Duration</label>
-					<label><input type="checkbox" ng-model="showbpm" ng-init="showbpm=true" checked> BPM</label>			
-					<label><input type="checkbox" ng-model="showDroptime" ng-init="showDroptime=false" checked> Drop Time</label>
-					<label><input type="checkbox" ng-model="showKilltime" ng-init="showKilltime=false" checked> Kill Time</label>	
-					<label><input type="checkbox" ng-model="showArtist" ng-init="showKilltime=false" checked> Artist</label>	
-					<label><input type="checkbox" ng-model="showGenre" ng-init="showKilltime=false" checked> Genre</label>	
-				</div>
-			</div>		
+				        	<md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="musicCtrl.editMusic(music);">
+				        		<md-icon md-icon-set="md">create</md-icon>
+				        	</md-button>
+
+				        	<md-button class="md-fab md-mini md-warn" aria-label="Remove" ng-click="musicCtrl.deleteMusic(music);">
+				        		<md-icon md-icon-set="md">remove</md-icon>
+				        	</md-button>
+				        </td>
+				      </tr>
+				    </tbody>
+				  </table>
+				</md-table-container>	
+			</md-card>
+
+			<div>
+				<md-card layout-padding>
+					<md-card-title><h2 style="margin: 0;">Showing:</h2></md-card-title>
+					
+					<md-card-content>
+						<md-switch aria-label="Show duration" class="md-accent" ng-init="showDuration=true" data-ng-model="showDuration">
+							Duration
+						</md-switch>
+
+						<md-switch aria-label="Show bpm" class="md-accent" ng-init="showBpm=true" data-ng-model="showBpm">
+							BPM
+						</md-switch>
+
+						<md-switch aria-label="Show droptime" class="md-accent" ng-init="showDroptime=false" data-ng-model="showDroptime">
+							Droptime
+						</md-switch>
+
+						<md-switch aria-label="Show killtime" class="md-accent" ng-init="showKilltime=false" data-ng-model="showKilltime">
+							Killtime
+						</md-switch>
+
+						<md-switch aria-label="Show artist" class="md-accent" ng-init="showArtist=false" data-ng-model="showArtist">
+							Artist
+						</md-switch>
+
+						<md-switch aria-label="Show genre" class="md-accent" ng-init="showGenre=false" data-ng-model="showGenre">
+							Genre
+						</md-switch>
+					</md-card-content>
+				</md-card>
+			</div>
 		</div>
-	</div>			
+	</md-content>
 </div>
