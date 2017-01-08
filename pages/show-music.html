@@ -1,0 +1,35 @@
+<div ng-controller="MusicController as musicCtrl" ng-init="musicCtrl.selectTags();">
+	<md-card>
+		<md-card-title><md-card-title-text><h2 class="md-title">Title: {{musicCtrl.selectedMusic.title}}</h2></md-card-title-text></md-card-title>
+		<md-card-content>
+			<div layout="column">
+				<div><b>Duration: </b>{{musicCtrl.selectedMusic.duration ? musicCtrl.selectedMusic.getDurationFormatted() : "unknown"}}</div>
+				<div><b>Droptime: </b>{{musicCtrl.selectedMusic.droptime ? musicCtrl.selectedMusic.droptime : "unknown"}}</div>
+				<div><b>Killtime: </b>{{musicCtrl.selectedMusic.killtime ? musicCtrl.selectedMusic.killtime : "unknown"}}</div>
+				<div><b>BPM: </b>{{musicCtrl.selectedMusic.bpm ? musicCtrl.selectedMusic.bpm : "unknown"}}</div>
+				<div><b>Artist: </b>{{musicCtrl.selectedMusic.artist ? musicCtrl.selectedMusic.artist.name : "unknown"}}</div>
+				<div><b>Genre: </b>{{musicCtrl.selectedMusic.genre ? musicCtrl.selectedMusic.genre.name : "unknown"}}</div>
+				<div>
+					<b>Tags</b>
+					<md-chips data-ng-model="musicCtrl.selectedMusic.tags" md-autocomplete-snap md-require-match="true">
+						<md-autocomplete md-selected-item="musicCtrl.selectedItem" md-search-text="searchText" md-items="tag in musicCtrl.tagsOut | filter: { name: searchText }" md-item-text="tag.name" placeholder="Search for a tag">
+							<span md-highlight-text="musicCtrl.searchText"> {{tag.name}} </span>
+						</md-autocomplete>
+
+						<md-chip-template>
+							<strong>{{$chip.name}}</strong>
+							<!-- <em>(fruit)</em> -->
+						</md-chip-template>							
+					</md-chips>
+				</div><br>
+				<div><b>Playlists: </b>coming soon</div>
+			</div>
+		</md-card-content>
+		<md-card-actions layout="row" layout-align="end center">
+			<md-button class="md-fab md-accent md-mini" ng-click="musicCtrl.updateMusic(selectedMusic);">
+				<md-icon md-icon-set="md">save</md-icon>
+			</md-button>
+		</md-card-actions>
+	</md-card>
+</div>
+<!-- md-transform-chip="musicCtrl.transformChip($chip)" -->

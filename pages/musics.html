@@ -12,44 +12,45 @@
 		<div layout="row" layout-align="space-between">
 			<md-card style="width:80%;">
 				<md-table-container style="height: 78vh;">
-				  <table md-table>
-				    <thead md-head>
-				      <tr md-row>
-				        <th md-column><span>Title</span></th>
-				        <th md-column md-numeric ng-show="showDuration"><span>Duration</span></th>
-				        <th md-column md-numeric ng-show="showDroptime">Drop Time (s)</th>
-				        <th md-column md-numeric ng-show="showKilltime">Kill Time (s)</th>
-				        <th md-column md-numeric ng-show="showBpm">BPM</th>
-				        <th md-column md-numeric ng-show="showArtist">Artist</th>
-				        <th md-column md-numeric ng-show="showGenre">Genre</th>
-				        <th md-column md-numeric>Actions</th>
-				      </tr>
-				    </thead>
-				    <tbody md-body>
-				      <tr md-row ng-repeat="music in musicCtrl.musics">
-				        <td md-cell>{{music.title}}</td>
-				        <td md-cell ng-show="showDuration">{{music.duration ? music.getDurationFormatted() : "-"}}</td>
-				        <td md-cell ng-show="showDroptime">{{music.droptime ? music.droptime : "-"}}</td>
-				        <td md-cell ng-show="showKilltime">{{music.killtime ? music.killtime : "-"}}</td>
-				        <td md-cell ng-show="showBpm">{{music.bpm ? music.bpm : "-"}}</td>
-				        <td md-cell ng-show="showArtist">{{music.artist.name ? music.artist.name : "-"}}</td>
-				        <td md-cell ng-show="showGenre">{{music.genre.name ? music.genre.name : "-"}}</td>
-				        <td md-cell colspan="3">
-				        	<md-button class="md-fab md-mini md-accent" aria-label="Show">
-				        		<md-icon md-icon-set="md">visibility</md-icon>
-				        	</md-button>
+					<table md-table>
+						<thead md-head>
+							<tr md-row>
+								<th md-column>Title</th>
+								<th md-column md-numeric ng-show="showDroptime">Ddrop Time (s)</th>
+								<th md-column md-numeric ng-show="showKilltime">Kill Time (s)</th>
+								<th md-column md-numeric ng-show="showBpm">BPM</th>
+								<th md-column md-numeric ng-show="showArtist">Artist</th>
+								<th md-column md-numeric ng-show="showGenre">Genre</th>
+								<th md-column md-numeric ng-show="showDuration">Duration</th>
+								<th md-column md-numeric>Actions</th>
+							</tr>
+						</thead>
 
-				        	<md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="musicCtrl.editMusic(music);">
-				        		<md-icon md-icon-set="md">create</md-icon>
-				        	</md-button>
+						<tbody md-body>
+							<tr md-row ng-repeat="music in musicCtrl.musics">
+								<td md-cell>{{music.title}}</td>
+								<td md-cell ng-show="showDuration">{{music.duration ? music.getDurationFormatted() : "-"}}</td>
+								<td md-cell ng-show="showDroptime">{{music.droptime ? music.droptime : "-"}}</td>
+								<td md-cell ng-show="showKilltime">{{music.killtime ? music.killtime : "-"}}</td>
+								<td md-cell ng-show="showBpm">{{music.bpm ? music.bpm : "-"}}</td>
+								<td md-cell ng-show="showArtist">{{music.artist.name ? music.artist.name : "-"}}</td>
+								<td md-cell ng-show="showGenre">{{music.genre.name ? music.genre.name : "-"}}</td>
+								<td md-cell colspan="3">
+								<md-button class="md-fab md-mini md-accent" aria-label="Show" ng-click="musicCtrl.showMusic(music);">
+								<md-icon md-icon-set="md">visibility</md-icon>
+								</md-button>
 
-				        	<md-button class="md-fab md-mini md-warn" aria-label="Remove" ng-click="musicCtrl.deleteMusic(music);">
-				        		<md-icon md-icon-set="md">remove</md-icon>
-				        	</md-button>
-				        </td>
-				      </tr>
-				    </tbody>
-				  </table>
+								<md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="musicCtrl.editMusic(music);">
+								<md-icon md-icon-set="md">create</md-icon>
+								</md-button>
+
+								<md-button class="md-fab md-mini md-warn" aria-label="Remove" ng-click="musicCtrl.deleteMusic(music.id);">
+								<md-icon md-icon-set="md">remove</md-icon>
+								</md-button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</md-table-container>	
 			</md-card>
 

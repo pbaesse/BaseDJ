@@ -1,6 +1,6 @@
 "use strict";
 var Music = class Music {
-	constructor(id, title, duration, droptime, killtime, bpm, artist, genre) {
+	constructor(id, title, duration, droptime, killtime, bpm, artist, genre, tags) {
 		this.id = id;
 		this.title = title;			
 		this.duration = duration;
@@ -9,25 +9,8 @@ var Music = class Music {
 		this.bpm = bpm;
 		this.artist = artist;
 		this.genre = genre;
+		this.tags = tags;
 	}
-
-	// setId(id) { this.id = id; }
-	// setTitle(title) { this.title = title; }
-	// setDuration(duration) { this.duration = duration; }
-	// setDroptime(droptime) { this.droptime = droptime; }
-	// setKilltime(killtime) { this.killtime = killtime; }
-	// setBpm(bpm) { this.bpm = bpm; }
-	// setArtist(artist) { this.artist = id; }
-	// setId(id) { this.id = id; }
-
-	// getId() { return this.id; }
-	// getTitle() { return this.title; }
-	// getDuration() { return this.duration; }
-	// getDroptime() { return this.droptime; }
-	// getKilltime() { return this.killtime; }
-	// getBpm() { return this.bpm; }
-	// getArtist() { return this.artist; }
-	// getGenre() { return this.genre; }
 
 	getDurationFormatted() { return formatSeconds(this.duration); }
 };
@@ -45,3 +28,14 @@ var Genre = class Genre {
 		this.name = name;
 	}
 };
+
+var Tag = class Tag {
+	constructor(id, name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	toString() {
+		return this.name;
+	}
+}

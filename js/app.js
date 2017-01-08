@@ -4,11 +4,28 @@
 		this.musics = [];
 		this.artists = [];
 		this.genres = [];
+		this.tags = [];
+		this.tagsOut = [];
+		this.selectedItem = null;
 
 		if (localStorage.getItem("selectedMusic") != null) {
-			this.selectedMusic = JSON.parse(localStorage.getItem("selectedMusic"));
+			var tmpMusic = JSON.parse(localStorage.getItem("selectedMusic"));
+			var artist = new Artist(tmpMusic.artist.id, tmpMusic.artist.name);
+			var genre = new Genre(tmpMusic.genre.id, tmpMusic.genre.name);
+			var tags = [];
+			if (tmpMusic.tags) {
+				tmpMusic.tags.forEach(function(value) {
+					tags.push(new Tag(value.id, value.name));
+				});
+			}
+			this.selectedMusic = new Music(tmpMusic.id, tmpMusic.title, tmpMusic.duration, tmpMusic.droptime, tmpMusic.killtime, tmpMusic.bpm, artist, genre, tags);
 		} else {
 			this.selectedMusic = null;
+		}
+
+		this.showMusic = function(music) {
+			localStorage.setItem("selectedMusic", JSON.stringify(music));
+			goto("show-music");
 		}
 
 		this.deleteMusic = function(music) {
@@ -22,7 +39,7 @@
 		};
 
 		this.updateMusic = function() {
-			var music = new Music(this.selectedMusic.id, this.selectedMusic.title, this.selectedMusic.duration, this.selectedMusic.droptime, this.selectedMusic.killtime, this.selectedMusic.bpm, this.selectedMusic.artist, this.selectedMusic.genre);
+			var music = new Music(this.selectedMusic.id, this.selectedMusic.title, this.selectedMusic.duration, this.selectedMusic.droptime, this.selectedMusic.killtime, this.selectedMusic.bpm, this.selectedMusic.artist, this.selectedMusic.genre, this.selectedMusic.tags);
 			ManipulateDB.updateMusic(music);
 			localStorage.removeItem("selectedMusic");
 			alert("Music updated!");
@@ -53,29 +70,45 @@
 		this.selectArtists = function() {
 			this.artists = ManipulateDB.selectAllArtist();
 		};	
+
+		this.selectTags = function() {
+			this.tags = ManipulateDB.selectAllTag();
+			if (this.selectedMusic) {
+				this.tagsOut = diffById(this.tags, this.selectedMusic.tags);
+			}
+		};
+
+		function diffById(arrayAll, arrayIn) {
+			// var start = new Date().getTime();
+			var arrayOut = [];
+			arrayIn.forEach(function(value1, index1, array1) {
+				arrayAll.forEach(function(value2, index2, array2) {
+					if (value1.id == value2.id) {
+						array2.splice(index2, 1)
+						return;
+					};
+				});
+			});
+			// var end = new Date().getTime();
+			// console.log("It takes " + (end - start) + "ms")
+			return arrayAll;
+		};
 	}]);
 
-	app.config(function($mdThemingProvider) {
-	  $mdThemingProvider.theme('default').accentPalette("indigo").primaryPalette("teal").warnPalette("pink");
-	});
-
-	app.config(function($mdIconProvider) {
-	  $mdIconProvider.fontSet('md', 'material-icons');
-	});
-
+	// S E R V I C E S
 	app.service("ManipulateDB", manipulateDB);
-
 	manipulateDB.$inject = ['$http'];
 
 	function manipulateDB() {
-		var vm = this;
+		var self = this;
 
-		vm.deleteMusic = deleteMusic;
-		vm.updateMusic = updateMusic;
-		vm.insertMusic = insertMusic;
-		vm.selectAllMusic = selectAllMusic;
-		vm.selectAllArtist = selectAllArtist;
-		vm.selectAllGenre = selectAllGenre;
+		self.deleteMusic = deleteMusic;
+		self.updateMusic = updateMusic;
+		self.insertMusic = insertMusic;
+		self.selectAllMusic = selectAllMusic;
+		self.selectAllArtist = selectAllArtist;
+		self.selectAllGenre = selectAllGenre;
+		self.selectAllTag = selectAllTag;
 
 		// internal functions
 		function deleteMusic(id) {
@@ -97,6 +130,22 @@
 
 			var stm = "UPDATE music SET title = "+title+", duration = "+duration+", drop_time = "+droptime+", kill_time = "+killtime+", bpm = "+bpm+", id_artist = "+idArtist+", id_genre = "+idGenre+" WHERE id = "+id+";";
 			connection.run(stm);
+
+			if (music.tags) {
+				var stm1 = "DELETE FROM music_tag WHERE id_music = "+id+";";
+				connection.run(stm1);
+
+				var values = "";
+				music.tags.forEach(function(tag, index, array) {
+					values += "("+id+","+tag.id+")";
+					if (index+1 <= array.length - 1 ) {
+						values += ", ";
+					}
+				});
+				var stm2 = "INSERT INTO music_tag(id_music, id_tag) VALUES " + values + ";";
+				connection.run(stm2);
+			}
+
 			updateDatabase();
 		}
 
@@ -136,7 +185,15 @@
 					artist = new Artist(res.id_artist, res3.name);
 				}
 
-				musics.push(new Music(res.id, res.title, res.duration, res.drop_time, res.kill_time, res.bpm, artist, genre));
+				var stm4 = connection.prepare("SELECT tag.* FROM tag INNER JOIN music_tag ON music_tag.id_tag = tag.id WHERE music_tag.id_music = "+res.id+";");
+
+				var tags = [];
+				while(stm4.step()) {
+					res4 = stm4.getAsObject();
+					tags.push(new Tag(res4.id, res4.name));
+				}
+
+				musics.push(new Music(res.id, res.title, res.duration, res.drop_time, res.kill_time, res.bpm, artist, genre, tags));
 			}
 
 			return musics;
@@ -161,5 +218,24 @@
 			}
 			return genres;
 		}
+
+		function selectAllTag() {
+			var tags = [];
+			var stm = connection.prepare("SELECT * FROM tag");
+			while(stm.step()) {
+				res = stm.getAsObject();
+				tags.push(new Tag(res.id, res.name));
+			}
+			return tags;
+		}
 	}
+
+	// D E S I G N
+	app.config(function($mdThemingProvider) {
+	  $mdThemingProvider.theme('default').accentPalette("indigo").primaryPalette("teal").warnPalette("pink");
+	});
+
+	app.config(function($mdIconProvider) {
+	  $mdIconProvider.fontSet('md', 'material-icons');
+	});
 })();
