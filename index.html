@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Area 51</title>
+    <title>BaseDJ</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" type="text/css" href="./node_modules/angular-material/angular-material.min.css">
     <link rel="stylesheet" type="text/css" href="./fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -14,7 +14,7 @@
 </head>
 <body ng-app="mainModule" onload="goto('home');"> 
 	<div ng-cloak ng-init="currentNavItem='home'">
-		<md-content style="overflow: hidden; display: flex; flex-direction: column; height: 100vh;">
+		<md-content style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
 			<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
 				<md-nav-item onclick="goto('home');" md-nav-click="goto('home')" name="home">Home</md-nav-item>
 				<md-nav-item onclick="goto('musics');" md-nav-click="goto('musics')" name="musics">Musics</md-nav-item>

@@ -7,6 +7,7 @@
 		this.tags = [];
 		this.tagsOut = [];
 		this.selectedItem = null;
+		this.selectedTags = [];
 
 		if (localStorage.getItem("selectedMusic") != null) {
 			var tmpMusic = JSON.parse(localStorage.getItem("selectedMusic"));
@@ -78,20 +79,48 @@
 			}
 		};
 
+		this.isInQuery = function(tags) {
+			if (!tags) return false;
+			var tagCount = 0;
+
+			this.selectedTags.forEach(function(selectedTag) {
+				var result = false;
+
+				tags.every(function(tag) {
+					if (selectedTag.id == tag.id) {
+						result = true;
+						return false;
+					} else {
+						return true;
+					}
+				});
+
+				if (result) tagCount++;
+			});
+
+			return this.selectedTags.length == tagCount;
+		};
+
 		function diffById(arrayAll, arrayIn) {
 			// var start = new Date().getTime();
 			var arrayOut = [];
-			arrayIn.forEach(function(value1, index1, array1) {
-				arrayAll.forEach(function(value2, index2, array2) {
-					if (value1.id == value2.id) {
-						array2.splice(index2, 1)
-						return;
-					};
+			arrayAll.forEach(function(valueA, indexA, arrayA) {
+				var exists = false;
+				
+				arrayIn.forEach(function(valueI, indexI, arrayI) {
+					if (valueA.id == valueI.id) {
+						exists = true;
+					}
 				});
+
+				if (!exists) {
+					arrayOut.push(valueA);
+				}
 			});
+			
 			// var end = new Date().getTime();
 			// console.log("It takes " + (end - start) + "ms")
-			return arrayAll;
+			return arrayOut;
 		};
 	}]);
 
