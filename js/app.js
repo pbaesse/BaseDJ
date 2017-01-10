@@ -62,6 +62,7 @@
 
 		this.selectMusics = function() {
 			this.musics = ManipulateDB.selectAllMusic();
+			console.log("selectMusic called");
 		};
 
 		this.selectGenres = function() {
@@ -79,27 +80,10 @@
 			}
 		};
 
-		this.isInQuery = function(tags) {
-			if (!tags) return false;
-			var tagCount = 0;
-
-			this.selectedTags.forEach(function(selectedTag) {
-				var result = false;
-
-				tags.every(function(tag) {
-					if (selectedTag.id == tag.id) {
-						result = true;
-						return false;
-					} else {
-						return true;
-					}
-				});
-
-				if (result) tagCount++;
-			});
-
-			return this.selectedTags.length == tagCount;
-		};
+		this.queryTags = function() {
+			this.musics = ManipulateDB.selectMusicByTags(this.selectedTags);
+			console.log("queryTags called");
+		}
 
 		function diffById(arrayAll, arrayIn) {
 			// var start = new Date().getTime();
@@ -138,6 +122,7 @@
 		self.selectAllArtist = selectAllArtist;
 		self.selectAllGenre = selectAllGenre;
 		self.selectAllTag = selectAllTag;
+		self.selectMusicByTags = selectMusicByTags;
 
 		// internal functions
 		function deleteMusic(id) {
@@ -256,6 +241,53 @@
 				tags.push(new Tag(res.id, res.name));
 			}
 			return tags;
+		}
+
+		function selectMusicByTags(tags) {
+			var filter = "";
+			if (tags && tags.length > 0) {
+				var values = "music_tag.id_tag = ";
+				tags.forEach(function(value, index, array) {
+					values += value.id + "";
+					if (index + 1 <= array.lenght - 1) {
+						values += " OR ";
+					}
+				});
+				var filter = "INNER JOIN music_tag ON music.id = music_tag.id_music WHERE " + values + ";";
+			}
+
+			var musics = [];
+			var stm = connection.prepare("SELECT music.* FROM music "+filter+";");
+			while(stm.step()) {
+				res = stm.getAsObject();
+
+				var genre = null, artist = null;
+				if (res.id_genre) {
+					var stm2 = connection.prepare("SELECT name FROM genre WHERE id = " + res.id_genre + ";");
+					stm2.step();
+					var res2 = stm2.getAsObject();
+					genre = new Genre(res.id_genre, res2.name);
+				}
+
+				if (res.id_artist) {
+					var stm3 = connection.prepare("SELECT name FROM artist WHERE id = " + res.id_artist + ";");
+					stm3.step();
+					var res3 = stm3.getAsObject();
+					artist = new Artist(res.id_artist, res3.name);
+				}
+
+				var stm4 = connection.prepare("SELECT tag.* FROM tag INNER JOIN music_tag ON music_tag.id_tag = tag.id WHERE music_tag.id_music = "+res.id+";");
+
+				var tags = [];
+				while(stm4.step()) {
+					res4 = stm4.getAsObject();
+					tags.push(new Tag(res4.id, res4.name));
+				}
+
+				musics.push(new Music(res.id, res.title, res.duration, res.drop_time, res.kill_time, res.bpm, artist, genre, tags));
+			}
+
+			return musics;
 		}
 	}
 

@@ -8,7 +8,7 @@
 			</div>
 
 			<div layout="row">
-				<md-chips data-ng-model="musicCtrl.selectedTags" md-autocomplete-snap md-require-match="true">
+				<md-chips data-ng-model="musicCtrl.selectedTags" md-autocomplete-snap md-require-match="true" md-on-add="musicCtrl.queryTags();" md-on-remove="musicCtrl.queryTags()">
 					<md-autocomplete md-selected-item="musicCtrl.selectedItem" md-search-text="musicCtrl.searchText" md-items="tag in musicCtrl.tags | filter: { name: musicCtrl.searchText }" md-item-text="tag.name" placeholder="Search for a tag">
 						<span md-highlight-text="musicCtrl.searchText"> {{tag.name}} </span>
 					</md-autocomplete>
@@ -41,7 +41,7 @@
 						</thead>
 
 						<tbody md-body>
-							<tr md-row ng-repeat="music in musicCtrl.musics" ng-show="musicCtrl.isInQuery(music.tags)">
+							<tr md-row ng-repeat="music in musicCtrl.musics">
 								<td md-cell>{{music.title}}</td>
 								<td md-cell ng-show="showDuration">{{music.duration ? music.getDurationFormatted() : "-"}}</td>
 								<td md-cell ng-show="showDroptime">{{music.droptime ? music.droptime : "-"}}</td>
