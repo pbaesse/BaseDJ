@@ -12,6 +12,13 @@
 		this.selectedItem = null;
 		this.selectedTags = [];
 
+		var originEv;
+
+		this.openMenu = function($mdOpenMenu, ev, music) {
+			originEv = ev;
+			$mdOpenMenu(ev);
+		}
+
 		if (localStorage.getItem("selectedMusic") != null) {
 			var tmpMusic = JSON.parse(localStorage.getItem("selectedMusic"));
 			var artist = new Artist(tmpMusic.artist.id, tmpMusic.artist.name);
@@ -32,11 +39,11 @@
 			goto("show-music");
 		}
 
-		this.deleteMusic = function(music) {
+		this.deleteMusic = function(id) {
 			var confirmation = confirm("You really want to delete this music?");
 
 			if (confirmation) {
-				ManipulateDB.deleteMusic(music.id);
+				ManipulateDB.deleteMusic(id);
 				alert("Music deleted!");
 				goto("musics");
 			}

@@ -29,12 +29,12 @@
 						<thead md-head>
 							<tr md-row>
 								<th md-column>Title</th>
-								<th md-column md-numeric ng-show="showDroptime">Ddrop Time (s)</th>
+								<th md-column md-numeric ng-show="showDuration">Duration</th>
+								<th md-column md-numeric ng-show="showDroptime">Drop Time (s)</th>
 								<th md-column md-numeric ng-show="showKilltime">Kill Time (s)</th>
 								<th md-column md-numeric ng-show="showBpm">BPM</th>
 								<th md-column md-numeric ng-show="showArtist">Artist</th>
-								<th md-column md-numeric ng-show="showGenre">Genre</th>
-								<th md-column md-numeric ng-show="showDuration">Duration</th>
+								<th md-column md-numeric ng-show="showGenre">Genre</th>								
 								<th md-column md-numeric>Tags</th>
 								<th md-column md-numeric>Actions</th>
 							</tr>
@@ -53,17 +53,41 @@
 									<span class='md-accent' ng-repeat="tag in music.tags">{{tag.name}} </span>
 								</td>
 								<td md-cell colspan="3">
-								<md-button class="md-fab md-mini md-accent" aria-label="Show" ng-click="musicCtrl.showMusic(music);">
-								<md-icon md-icon-set="md">visibility</md-icon>
-								</md-button>
+									<md-menu>
+										<md-button aria-label="Open menu" class="md-icon-button" ng-click="musicCtrl.openMenu($mdOpenMenu, $event, music);">
+											<md-icon md-icon-set="md" md-menu-origin>more_horiz</md-icon>
+										</md-button>
+										<md-menu-content width="4">
+											<md-menu-item>
+												<md-button aria-label="Show music" ng-click="musicCtrl.showMusic(music);">
+													<md-icon md-icon-set="md" md-menu-align-target>visibility</md-icon>
+													Show
+												</md-button>														
+											</md-menu-item>
 
-								<md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="musicCtrl.editMusic(music);">
-								<md-icon md-icon-set="md">create</md-icon>
-								</md-button>
+											<md-menu-item>
+												<md-button aria-label="Edit music" ng-click="musicCtrl.editMusic(music);">
+													<md-icon md-icon-set="md">mode_edit</md-icon>
+													Edit
+												</md-button>
+											</md-menu-item>
 
-								<md-button class="md-fab md-mini md-warn" aria-label="Remove" ng-click="musicCtrl.deleteMusic(music.id);">
-								<md-icon md-icon-set="md">remove</md-icon>
-								</md-button>
+											<md-menu-item>
+												<md-button aria-label="Remove music" ng-click="musicCtrl.deleteMusic(music.id);">
+													<md-icon md-icon-set="md">remove</md-icon>
+													Delete
+												</md-button>
+											</md-menu-item>
+
+											<md-menu-divider></md-menu-divider>
+											<md-menu-item>
+												<md-button aria-label="Add to playlist">
+													<md-icon md-icon-set="md">playlist_add</md-icon>
+													Add to playlist
+												</md-button>
+											</md-menu-item>
+										</md-menu-content>
+									</md-menu>									
 								</td>
 							</tr>
 						</tbody>
