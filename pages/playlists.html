@@ -1,1 +1,61 @@
-<h1>Playlists</h1>
+<div ng-controller="MusicController as musicCtrl" ng-init="musicCtrl.selectPlaylists();" layout="column">
+	<md-toolbar class='md-primary'>
+		<div class="md-toolbar-tools" layout="row" layout-align="space-between center">
+			<div layout="row">
+				<md-button class="md-accent md-mini md-fab" ng-click="musicCtrl.addPlaylist($event)">
+					<md-icon md-icon-set="md">add</md-icon>
+				</md-button>
+			</div>
+
+			<div layout="row">
+				<!-- <md-chips data-ng-model="musicCtrl.selectedTags" md-autocomplete-snap md-require-match="true" md-on-add="musicCtrl.queryTags();" md-on-remove="musicCtrl.queryTags()">
+					<md-autocomplete md-selected-item="musicCtrl.selectedItem" md-search-text="musicCtrl.searchText" md-items="tag in musicCtrl.tags | filter: { name: musicCtrl.searchText }" md-item-text="tag.name" placeholder="Search for a tag">
+						<span md-highlight-text="musicCtrl.searchText"> {{tag.name}} </span>
+					</md-autocomplete>
+
+					<md-chip-template>
+						<strong>{{$chip.name}}</strong>
+					</md-chip-template>							
+				</md-chips> -->
+			</div>
+		</div>		
+	</md-toolbar>
+
+	<md-content layout-padding style="height: 100vh;">
+		<md-card>
+			<md-table-container>
+				<table md-table>
+					<thead md-head>
+						<tr md-row>
+							<th md-column>Name</th>
+							<!-- <th md-column md-numeric>Tags</th> -->
+							<th md-column md-numeric>Actions</th>
+						</tr>
+					</thead>
+
+					<tbody md-body>
+						<tr md-row ng-repeat="playlist in musicCtrl.playlists">
+							<td md-cell>{{playlist.name}}</td>
+							<!-- <td md-cell>
+								<span class='md-accent' ng-repeat="tag in music.tags">{{tag.name}} </span>
+							</td> -->
+							<td md-cell>
+							<!-- <md-button class="md-fab md-mini md-accent" aria-label="Show" ng-click="musicCtrl.showPlaylist(playlist);">
+							<md-icon md-icon-set="md">visibility</md-icon>
+							</md-button> -->
+
+							<md-button class="md-fab md-mini md-primary" aria-label="Edit" ng-click="musicCtrl.editPlaylist(playlist);">
+							<md-icon md-icon-set="md">create</md-icon>
+							</md-button>
+
+							<md-button class="md-fab md-mini md-warn" aria-label="Remove" ng-click="musicCtrl.deletePlaylist(playlist.id, $event);">
+							<md-icon md-icon-set="md">remove</md-icon>
+							</md-button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</md-table-container>	
+		</md-card>
+	</md-content>
+</div>

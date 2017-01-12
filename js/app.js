@@ -1,10 +1,13 @@
 (function() {
 	var app = angular.module("mainModule", ["ngMaterial", "md.data.table"]);
-	app.controller("MusicController", ["ManipulateDB", function(ManipulateDB) {
+	app.controller("MusicController", ["ManipulateDB", "$mdDialog", function(ManipulateDB, $mdDialog) {
+		
 		this.musics = [];
 		this.artists = [];
 		this.genres = [];
 		this.tags = [];
+		this.playlists = [];
+
 		this.tagsOut = [];
 		this.selectedItem = null;
 		this.selectedTags = [];
@@ -73,6 +76,10 @@
 			this.artists = ManipulateDB.selectAllArtist();
 		};	
 
+		this.selectPlaylists = function() {
+			this.playlists = ManipulateDB.selectAllPlaylist();
+		};
+
 		this.selectTags = function() {
 			this.tags = ManipulateDB.selectAllTag();
 			if (this.selectedMusic) {
@@ -83,6 +90,63 @@
 		this.queryTags = function() {
 			this.musics = ManipulateDB.selectMusicByTags(this.selectedTags);
 			console.log("queryTags called");
+		};
+
+		this.addPlaylist = function(ev) {
+			var confirm = $mdDialog.prompt()
+				.title("What's the playlist's name?")
+				.placeholder("Playlist name")
+				.ariaLabel("Playlist name")
+				.targetEvent(ev)
+				.ok('Done')
+				.cancel("Cancel");
+
+			$mdDialog.show(confirm).then(function(name) {
+				var playlist = new Playlist(0, name);
+				ManipulateDB.insertPlaylist(playlist);
+				alert("Go to playlists. [TODO: fix loading]");
+				// goto('playlists');
+			}, function() {
+				// do nothing
+			});
+		};
+
+		this.deletePlaylist = function(id, ev) {
+			var confirm = $mdDialog.confirm()
+				.title("Are you sure?")
+				.textContent("You cannot undo this action.")
+				.ariaLabel("Confirmation")
+				.targetEvent(ev)
+				.ok('Delete')
+				.cancel("Cancel");
+
+			$mdDialog.show(confirm).then(function() {
+				ManipulateDB.deletePlaylist(id);
+				alert("Go to playlists. [TODO: fix loading]");
+				// goto('playlists');
+			}, function() {
+				// do nothing
+			});			
+		};
+
+		this.editPlaylist = function(playlist, ev) {
+			var confirm = $mdDialog.prompt()
+				.title("What's the new playlist's name?")
+				.placeholder("Playlist name")
+				.initialValue(playlist.name)
+				.ariaLabel("Playlist name")
+				.targetEvent(ev)
+				.ok('Save')
+				.cancel("Cancel");
+
+			$mdDialog.show(confirm).then(function(name) {
+				playlist.name = name;
+				ManipulateDB.updatePlaylist(playlist);
+				alert("Go to playlists. [TODO: fix loading]");
+				// goto('playlists');
+			}, function() {
+				// do nothing
+			});
 		}
 
 		function diffById(arrayAll, arrayIn) {
@@ -123,6 +187,10 @@
 		self.selectAllGenre = selectAllGenre;
 		self.selectAllTag = selectAllTag;
 		self.selectMusicByTags = selectMusicByTags;
+		self.selectAllPlaylist = selectAllPlaylist;
+		self.insertPlaylist = insertPlaylist;
+		self.deletePlaylist = deletePlaylist;
+		self.updatePlaylist = updatePlaylist;
 
 		// internal functions
 		function deleteMusic(id) {
@@ -288,6 +356,36 @@
 			}
 
 			return musics;
+		}
+
+		function selectAllPlaylist() {
+			var playlists = [];
+			var stm = connection.prepare("SELECT * FROM playlist;");
+			while(stm.step()) {
+				res = stm.getAsObject();
+				playlists.push(new Playlist(res.id, res.name));
+			}
+			return playlists;
+		}
+
+		function insertPlaylist(playlist) {
+			if (!playlist.name || playlist.name == "") return;
+			var name = "'" + playlist.name + "'";
+			var stm = connection.run("INSERT INTO playlist(name) VALUES ("+ name +");");
+			updateDatabase();
+		}
+
+		function deletePlaylist(id) {
+			var stm = connection.run("DELETE FROM playlist WHERE id = " + id + ";");
+			updateDatabase();
+		} 
+
+		function updatePlaylist(playlist) {
+			if (!playlist.name || playlist.name == "") return;
+			var name = "'" + playlist.name + "'";
+			var id = playlist.id;
+			var stm = connection.run("UPDATE playlist SET name = " + name + " WHERE id = " + id + ";");
+			updateDatabase();
 		}
 	}
 

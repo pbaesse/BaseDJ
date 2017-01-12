@@ -34,8 +34,12 @@ var Tag = class Tag {
 		this.id = id;
 		this.name = name;
 	}
+};
 
-	toString() {
-		return this.name;
+// TODO: Add music array
+var Playlist = class Playlist {
+	constructor(id, name) {
+		this.id = id;
+		this.name = name;
 	}
-}
+};
